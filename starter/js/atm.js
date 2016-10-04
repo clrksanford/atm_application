@@ -1,4 +1,10 @@
 //Begin with the document ready function
+$(document).ready(function() {
+  $('#depositChecking').on('click',depositChecking);
+  $('#withdrawChecking').on('click',withdrawChecking);
+  $('#depositSavings').on('click',depositSavings);
+  $('#withdrawSavings').on('click',withdrawSavings);
+})
 
     //Checking account deposit function
 
