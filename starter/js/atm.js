@@ -1,22 +1,23 @@
 //Begin with the document ready function
 $(document).ready(function() {
-  $('#depositChecking').on('click',deposit);
-  $('#withdrawChecking').on('click',withdraw);
-  $('#depositSavings').on('click',deposit);
-  $('#withdrawSavings').on('click',withdraw);
+  $('#depositChecking').on('click',deposOrWithdraw);
+  $('#withdrawChecking').on('click',deposOrWithdraw);
+  $('#depositSavings').on('click',deposOrWithdraw);
+  $('#withdrawSavings').on('click',deposOrWithdraw);
 })
 
 function makeANum(string) {
-
     return parseInt(string.replace(/\D/g,''));
-
 }
 
-function deposit(e) {
+function deposOrWithdraw(e) {
   e.preventDefault();
   var $clicked = $(e.currentTarget);
   var clickedId = $clicked.attr('id');
   var account;
+  var transaction;
+
+//Determine from button id which account to target
 
   if(clickedId.search('Savings') > 0) {
     account = 'Savings';
@@ -24,43 +25,65 @@ function deposit(e) {
     account = "Checking";
   }
 
-  var amount = makeANum($('#amount' + account).val());
-  var balance = makeANum($('#balance' + account).text());
-
-  if (!Number.isInteger(amount) || !Number.isInteger(balance)) {
-    alert("You must insert a number!");
-  } else {
-    balance += amount;
-    $('#balance' + account).text('$' + balance);
-    $('#amount' + account).val('');
-  }
-}
-
-function withdraw(e) {
-  e.preventDefault();
-  var $clicked = $(e.currentTarget);
-  var clickedId = $clicked.attr('id');
-  var account;
-
-  if(clickedId.search('Savings') > 0) {
-    account = 'Savings';
-  } else {
-    account = "Checking";
-  }
+//Set account's amount and balance variables
 
   var amount = makeANum($('#amount' + account).val());
   var balance = makeANum($('#balance' + account).text());
 
   if (!Number.isInteger(amount) || !Number.isInteger(balance)) {
     alert("You must insert a number!");
-  } else if (balance - amount < 0) {
+    return false;
+  }
+
+//Determine from button id which transaction to run
+
+  if(clickedId.search('deposit') >= 0) {
+    transaction = function() {
+      balance += amount;
+      return balance;
+    }
+  } else {
+    transaction = function() {
+      balance -= amount;
+      return balance;
+    }
+  }
+
+  var newBalance = transaction();
+
+  if (newBalance < 0) {
     alert('You cannot overdraw the account!');
   } else {
-    balance -= amount;
-    $('#balance' + account).text('$' + balance);
+    $('#balance' + account).text('$' + newBalance);
     $('#amount' + account).val('');
   }
 }
+
+//--------- CODE GRAVEYARD ----------//
+
+// function deposit(e) {
+//   e.preventDefault();
+//   var $clicked = $(e.currentTarget);
+//   var clickedId = $clicked.attr('id');
+//   var account;
+//
+//   if(clickedId.search('Savings') > 0) {
+//     account = 'Savings';
+//   } else {
+//     account = "Checking";
+//   }
+//
+//   var amount = makeANum($('#amount' + account).val());
+//   var balance = makeANum($('#balance' + account).text());
+//
+//   if (!Number.isInteger(amount) || !Number.isInteger(balance)) {
+//     alert("You must insert a number!");
+//   } else {
+//     balance += amount;
+//     $('#balance' + account).text('$' + balance);
+//     $('#amount' + account).val('');
+//   }
+// }
     //Checking account deposit function
 
       //On click of the depositChecking button
