@@ -6,6 +6,66 @@ $(document).ready(function() {
   $('#withdrawSavings').on('click',withdrawSavings);
 })
 
+function makeANum(string) {
+
+    return parseInt(string.replace('$',''));
+
+}
+
+function depositChecking(e) {
+  e.preventDefault();
+  var amount = makeANum($('#amountChecking').val());
+  var checkingBalance = makeANum($('#checkingBalance').text());
+
+  if (!Number.isInteger(amount) || !Number.isInteger(checkingBalance)) {
+    alert("You must insert a number!");
+  } else {
+    checkingBalance += amount;
+    $('#checkingBalance').text('$' + checkingBalance);
+    $('#amountChecking').val('');
+  }
+}
+
+function withdrawChecking(e) {
+  e.preventDefault();
+  var amount = makeANum($('#amountChecking').val());
+  var checkingBalance = makeANum($('#checkingBalance').text());
+
+  if(checkingBalance - amount < 0) {
+    alert('You cannot overdraw the account!');
+  } else {
+    checkingBalance -= amount;
+    $('#checkingBalance').text('$' + checkingBalance);
+    $('#amountChecking').val('');
+  }
+}
+
+function depositSavings(e) {
+  e.preventDefault();
+  var amount = makeANum($('#amountSavings').val());
+  var savingsBalance = makeANum($('#savingsBalance').text());
+
+  if (!Number.isInteger(amount) || !Number.isInteger(savingsBalance)) {
+    alert("You must insert a number!");
+  } else {
+    savingsBalance += amount;
+    $('#savingsBalance').text('$' + savingsBalance);
+    $('#amountSavings').val('');
+  }
+}
+
+function withdrawSavings() {
+  var amount = makeANum($('#amountSavings').val());
+  var savingsBalance = makeANum($('#savingsBalance').text());
+
+  if(savingsBalance - amount < 0) {
+    alert('You cannot overdraw the account!');
+  } else {
+    savingsBalance -= amount;
+    $('#savingsBalance').text('$' + savingsBalance);
+    $('#amountSavings').val('');
+  }
+}
     //Checking account deposit function
 
       //On click of the depositChecking button
