@@ -1,69 +1,64 @@
 //Begin with the document ready function
 $(document).ready(function() {
-  $('#depositChecking').on('click',depositChecking);
-  $('#withdrawChecking').on('click',withdrawChecking);
-  $('#depositSavings').on('click',depositSavings);
-  $('#withdrawSavings').on('click',withdrawSavings);
+  $('#depositChecking').on('click',deposit);
+  $('#withdrawChecking').on('click',withdraw);
+  $('#depositSavings').on('click',deposit);
+  $('#withdrawSavings').on('click',withdraw);
 })
 
 function makeANum(string) {
 
-    return parseInt(string.replace('$',''));
+    return parseInt(string.replace(/\D/g,''));
 
 }
 
-function depositChecking(e) {
+function deposit(e) {
   e.preventDefault();
-  var amount = makeANum($('#amountChecking').val());
-  var checkingBalance = makeANum($('#checkingBalance').text());
+  var $clicked = $(e.currentTarget);
+  var clickedId = $clicked.attr('id');
+  var account;
 
-  if (!Number.isInteger(amount) || !Number.isInteger(checkingBalance)) {
+  if(clickedId.search('Savings') > 0) {
+    account = 'Savings';
+  } else {
+    account = "Checking";
+  }
+
+  var amount = makeANum($('#amount' + account).val());
+  var balance = makeANum($('#balance' + account).text());
+
+  if (!Number.isInteger(amount) || !Number.isInteger(balance)) {
     alert("You must insert a number!");
   } else {
-    checkingBalance += amount;
-    $('#checkingBalance').text('$' + checkingBalance);
-    $('#amountChecking').val('');
+    balance += amount;
+    $('#balance' + account).text('$' + balance);
+    $('#amount' + account).val('');
   }
 }
 
-function withdrawChecking(e) {
+function withdraw(e) {
   e.preventDefault();
-  var amount = makeANum($('#amountChecking').val());
-  var checkingBalance = makeANum($('#checkingBalance').text());
+  var $clicked = $(e.currentTarget);
+  var clickedId = $clicked.attr('id');
+  var account;
 
-  if(checkingBalance - amount < 0) {
-    alert('You cannot overdraw the account!');
+  if(clickedId.search('Savings') > 0) {
+    account = 'Savings';
   } else {
-    checkingBalance -= amount;
-    $('#checkingBalance').text('$' + checkingBalance);
-    $('#amountChecking').val('');
+    account = "Checking";
   }
-}
 
-function depositSavings(e) {
-  e.preventDefault();
-  var amount = makeANum($('#amountSavings').val());
-  var savingsBalance = makeANum($('#savingsBalance').text());
+  var amount = makeANum($('#amount' + account).val());
+  var balance = makeANum($('#balance' + account).text());
 
-  if (!Number.isInteger(amount) || !Number.isInteger(savingsBalance)) {
+  if (!Number.isInteger(amount) || !Number.isInteger(balance)) {
     alert("You must insert a number!");
-  } else {
-    savingsBalance += amount;
-    $('#savingsBalance').text('$' + savingsBalance);
-    $('#amountSavings').val('');
-  }
-}
-
-function withdrawSavings() {
-  var amount = makeANum($('#amountSavings').val());
-  var savingsBalance = makeANum($('#savingsBalance').text());
-
-  if(savingsBalance - amount < 0) {
+  } else if (balance - amount < 0) {
     alert('You cannot overdraw the account!');
   } else {
-    savingsBalance -= amount;
-    $('#savingsBalance').text('$' + savingsBalance);
-    $('#amountSavings').val('');
+    balance -= amount;
+    $('#balance' + account).text('$' + balance);
+    $('#amount' + account).val('');
   }
 }
     //Checking account deposit function
